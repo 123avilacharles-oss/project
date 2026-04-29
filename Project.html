@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>AquaBottle Quantum | Next-Gen Hydroponic OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at 30% 20%, #e2f7dc, #bbe2b0);
+            min-height: 100vh;
+            color: #1a3f2a;
+            overflow-x: hidden;
+        }
+
+        /* Ultra Responsive Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0.8rem 1rem; }
+        }
+
+        /* Glassmorphism Premium */
+        .glass-quantum {
+            background: rgba(255, 255, 250, 0.94);
+            backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -20px rgba(0, 30, 0, 0.35), inset 0 1px 1px rgba(255,255,255,0.8);
+            border: 1px solid rgba(100, 150, 80, 0.3);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .glass-quantum:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 32px 60px -22px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header Responsive */
+        .quantum-header {
+            background: #0a2a1cd9;
+            backdrop-filter: blur(20px);
+            border-radius: 0 0 2rem 2rem;
+            border-bottom: 2px solid #b5e6a0;
+            padding: 0.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: clamp(1.3rem, 5vw, 2rem);
+            background: linear-gradient(135deg, #FAFFE6, #9fdf88);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav-group {
+            background: rgba(30, 65, 40, 0.7);
+            border-radius: 3rem;
+            padding: 0.3rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.2rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: #f0faea;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 680px) {
+            .nav-btn { padding: 0.4rem 0.8rem; font-size: 0.7rem; }
+            .nav-btn i { font-size: 0.75rem; }
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background: #4baa70;
+            color: white;
+            transform: scale(0.96);
+        }
+
+        /* Dashboard Grid Ultra Responsive */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.8rem 0;
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid { gap: 1rem; }
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #d4eace;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .progress-bar-modern {
+            height: 12px;
+            background: #ddecd6;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #42b36a, #1f6e42);
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.6s ease;
+        }
+
+        .badge-responsive {
+            background: #e3f3dc;
+            border-radius: 40px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        button {
+            border: none;
+            padding: 10px 18px;
+            border-radius: 3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: #2c7a4e;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary:hover, .btn-primary:active {
+            background: #1e5e3a;
+            transform: scale(0.97);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #479c64;
+            color: #236b44;
+        }
+
+        .btn-outline:hover {
+            background: #eaf7e5;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Auth Section */
+        .auth-card {
+            max-width: 500px;
+            margin: 12vh auto;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 3rem;
+            border: 1.5px solid #cde6c2;
+            background: white;
+            font-size: 0.9rem;
+            margin: 8px 0;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #3fa362;
+            outline: none;
+        }
+
+        .harvest-glow {
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            font-weight: 800;
+            background: #154e34;
+            display: inline-block;
+            padding: 0.2rem 1.5rem;
+            border-radius: 4rem;
+            color: #f3ffdb;
+            font-family: monospace;
+        }
+
+        canvas {
+            max-height: 220px;
+            width: 100%;
+        }
+
+        .insight-card {
+            background: #fefce8;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding: 1rem;
+            font-size: 0.7rem;
+            color: #2f6543;
+            border-top: 1px solid #c2e0b6;
+        }
+
+        /* Animations */
+        @keyframes gentlePulse {
+            0% { opacity: 0.8; transform: scale(1);}
+            100% { opacity: 1; transform: scale(1.01);}
+        }
+        .alert-pulse {
+            animation: gentlePulse 0.8s infinite alternate;
+            background: #fff2df;
+            border-radius: 2rem;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #d9e8d2; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #459c66; border-radius: 10px; }
+    </style>
+</head>
+<body>
+<div id="appRoot">
+    <!-- AUTH SECTION MODERN -->
+    <div id="authSection">
+        <div class="container auth-card">
+            <div class="glass-quantum" style="padding: 2.2rem; text-align: center;">
+                <i class="fas fa-microchip" style="font-size: 3.8rem; color: #3d9b60;"></i>
+                <h2 style="margin: 0.5rem 0;">🌊 AquaBottle Q</h2>
+                <p style="margin-bottom: 1.5rem;">Quantum Hydroponic Intelligence • Pechay • Mustasa • Zero Carbon</p>
+                <div id="loginForm">
+                    <input type="text" id="loginUsername" placeholder="🌿 Farmer Name" value="ecofarmer">
+                    <input type="password" id="loginPassword" placeholder="🔒 Secret Key" value="greenfuture2025">
+                    <button id="loginBtn" class="btn-primary" style="width:100%; margin-top: 1rem;"><i class="fas fa-leaf"></i> Enter Neural Farm</button>
+                    <p style="font-size:11px; margin-top:1rem;">Demo: any username/password (≥3 chars) — Edge AI storage</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION - ULTRA FEATURE RICH -->
+    <div id="mainApp" class="hidden">
+        <div class="quantum-header">
+            <div class="container header-flex">
+                <div class="logo">
+                    <h1><i class="fas fa-seedling"></i> AquaBottle<span style="font-size: 0.8rem;"> | Quantum Core</span></h1>
+                    <p><i class="fas fa-chart-network"></i> 6th Gen AI · Predictive Biomonitoring</p>
+                </div>
+                <div class="nav-group">
+                    <button class="nav-btn active" data-tab="dash"><i class="fas fa-chart-line"></i> Nexus</button>
+                    <button class="nav-btn" data-tab="guide"><i class="fas fa-book-open"></i> Academy</button>
+                    <button class="nav-btn" data-tab="track"><i class="fas fa-chart-scatter"></i> Lab</button>
+                    <button class="nav-btn" data-tab="eco"><i class="fas fa-globe"></i> Impact</button>
+                    <button class="nav-btn" data-tab="analytics"><i class="fas fa-chart-pie"></i> DeepInsight</button>
+                    <button class="nav-btn" data-tab="community"><i class="fas fa-users"></i> BioHub</button>
+                    <button id="logoutMainBtn" class="nav-btn" style="background:#aa5a3a66;"><i class="fas fa-sign-out-alt"></i> Exit</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- DASHBOARD NEXUS - ENHANCED -->
+            <div id="dashTab">
+                <div class="dashboard-grid">
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <div class="metric-row"><span><i class="fas fa-chart-simple"></i> PhenoStage</span><strong id="plantStageLabel">🌱 Germination</strong></div>
+                        <div class="metric-row"><span>📅 Day <span id="currentDayNum">1</span> / 42</span><span id="healthChip" class="badge-responsive"><i class="fas fa-heartbeat"></i> Thriving</span></div>
+                        <div class="progress-bar-modern"><div class="progress-fill" id="growthFillMain" style="width: 2.38%"></div></div>
+                        <div class="metric-row"><span><i class="fas fa-chart-line"></i> Vitality Index</span><strong id="healthScoreSpan">94%</strong></div>
+                        <div class="metric-row"><span><i class="fas fa-bolt"></i> Bio-Efficiency</span><span id="bioEfficiency">A+</span></div>
+                        <button id="simulateDayBtn" class="btn-outline" style="width:100%; margin-top: 12px;"><i class="fas fa-forward-step"></i> Quantum Leap +1 Day</button>
+                    </div>
+
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <div class="metric-row"><span><i class="fas fa-stopwatch"></i> Harvest Countdown</span><span id="harvestCounter" class="harvest-glow" style="font-size:1.8rem; padding:0 1rem;">41d</span></div>
+                        <div id="harvestMsg" class="badge-responsive" style="margin: 12px 0; justify-content: center;">🌾 Growing vigorously</div>
+                        <div class="metric-row"><span><i class="fas fa-weight-hanging"></i> Forecast Yield</span><strong id="yieldEstimate">210g</strong></div>
+                        <div class="metric-row"><span><i class="fas fa-calendar"></i> Harvest Window</span><strong id="harvestWindow">Day 38-42</strong></div>
+                        <button id="resetGrowthBtn" class="btn-outline" style="width:100%;"><i class="fas fa-arrows-spin"></i> New Cycle + Compost AI</button>
+                    </div>
+
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <div class="metric-row"><span><i class="fas fa-water"></i> Reservoir</span><span><strong id="waterValue">85%</strong> <span id="waterStatusIcon">✅ Ideal</span></span></div>
+                        <div class="metric-row"><span><i class="fas fa-temperature-low"></i> Climate</span><span><strong id="tempValue">24.2°C</strong> / <span id="humidityVal">63%</span></span></div>
+                        <div class="metric-row"><span><i class="fas fa-sun"></i> DLI / Light</span><span><strong id="lightValue">6.4h</strong> <span id="lightStatusIcon">☀️ Optimal</span></span></div>
+                        <div class="metric-row"><span><i class="fas fa-flask"></i> pH & EC</span><span><strong id="phValue">6.5</strong> pH / <strong id="ecValue">1.2</strong> EC</span></div>
+                        <button id="simulateSensorBtn" class="btn-outline" style="width:100%;"><i class="fas fa-waveform"></i> Refresh Quantum Sensors</button>
+                    </div>
+
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <div class="metric-row"><span><i class="fas fa-brain"></i> AI Agronomist</span><i class="fas fa-robot"></i></div>
+                        <ul id="reminderList" style="list-style: none; margin: 8px 0; font-size:0.85rem;">
+                            <li><i class="fas fa-tint"></i> <span id="adviceWater">💧 Maintain 55-80% water</span></li>
+                            <li><i class="fas fa-flask"></i> <span id="adviceNutrient">🧪 Nutrient schedule: Day 10</span></li>
+                            <li><i class="fas fa-scissors"></i> <span id="advicePrune">✂️ Check root zone weekly</span></li>
+                            <li><i class="fas fa-lightbulb"></i> <span id="adviceLight">💡 Photoperiod: 14h ideal</span></li>
+                        </ul>
+                        <div id="urgentAlert" style="background:#fff2df; border-radius: 1.8rem; padding: 10px; margin-top: 6px; font-size:0.8rem;"></div>
+                    </div>
+                </div>
+                <div class="glass-quantum" style="padding: 0.8rem 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;">
+                    <span><i class="fas fa-recycle"></i> Upcycled PET: <strong id="bottlesSaved">8</strong> bottles</span>
+                    <span><i class="fas fa-cloud-moon"></i> Carbon Offset: <strong id="co2Saved">2.8 kg</strong> CO₂e</span>
+                    <span><i class="fas fa-chart-line"></i> Cycle #<strong id="cycleCounter">1</strong></span>
+                    <span><i class="fas fa-hand-sparkles"></i> Community Score: <strong id="impactScore">145 pts</strong></span>
+                </div>
+            </div>
+
+            <!-- GUIDE TAB ACADEMY -->
+            <div id="guideTab" class="hidden">
+                <div class="glass-quantum" style="padding: 2rem;">
+                    <h3><i class="fas fa-chalkboard-user"></i> Advanced Hydroponic Masterclass</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.2rem; margin: 1.5rem 0;">
+                        <div style="background:#f3faf0; border-radius:1.5rem; padding:1rem;"><i class="fas fa-wrench"></i> <strong>Kratky Method:</strong> Passive hydroponics using recycled bottles - perfect for pechay.</div>
+                        <div style="background:#f3faf0; border-radius:1.5rem; padding:1rem;"><i class="fas fa-leaf"></i> <strong>Seed selection:</strong> Black-seeded pechay & Green Mustasa thrive in pH 6.0-6.8.</div>
+                        <div style="background:#f3faf0; border-radius:1.5rem; padding:1rem;"><i class="fas fa-water"></i> <strong>Nutrient recipe:</strong> Masterblend 4-18-38 + Calcium Nitrate + Epsom salt.</div>
+                        <div style="background:#f3faf0; border-radius:1.5rem; padding:1rem;"><i class="fas fa-bug"></i> <strong>IPM protocol:</strong> Neem oil + diatomaceous earth for organic pest control.</div>
+                    </div>
+                    <div class="insight-card"><i class="fas fa-vial"></i> <strong>Pro formula:</strong> 2g Masterblend + 2g Calcium Nitrate + 1g MgSO4 per gallon of water.</div>
+                </div>
+            </div>
+
+            <!-- TRACK LAB - ADVANCED MANIPULATION -->
+            <div id="trackTab" class="hidden">
+                <div class="dashboard-grid">
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <h4><i class="fas fa-sliders-h"></i> Growth Timeline Controller</h4>
+                        <div class="metric-row"><span>🌿 Day <span id="trackDaySpan">1</span> / 42</span><span id="preciseStageLabel">Seedling</span></div>
+                        <div class="progress-bar-modern"><div class="progress-fill" id="trackProgressFill" style="width:2.38%"></div></div>
+                        <input type="range" id="daySlider" min="1" max="42" value="1" step="1" style="margin: 10px 0;">
+                        <button id="applyDayBtn" class="btn-primary" style="width:100%;">Apply Growth Shift</button>
+                        <hr style="margin: 18px 0;">
+                        <label><i class="fas fa-hand-holding-droplet"></i> Water Level (%)</label>
+                        <input type="number" id="manualWater" value="82" min="0" max="100">
+                        <label><i class="fas fa-sun"></i> Light Hours</label>
+                        <input type="number" id="manualLight" value="6.2" step="0.2">
+                        <label><i class="fas fa-flask"></i> pH (5.0-7.8)</label>
+                        <input type="number" id="manualPh" value="6.5" step="0.1">
+                        <label><i class="fas fa-temperature-low"></i> Temp °C</label>
+                        <input type="number" id="manualTemp" value="24.0" step="0.5">
+                        <button id="saveEnvAdvancedBtn" class="btn-outline" style="width:100%; margin-top: 10px;">Update & Recalibrate AI</button>
+                    </div>
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <h4><i class="fas fa-chart-line"></i> Health Trajectory</h4>
+                        <canvas id="growthChartCanvas" width="400" height="200"></canvas>
+                        <button id="randomSensorChartBtn" class="btn-outline" style="width:100%; margin-top: 12px;"><i class="fas fa-dice-d6"></i> Bio-Randomize Environment</button>
+                        <div class="badge-responsive" style="margin-top: 10px; text-align:center;">📈 Historical health regression</div>
+                    </div>
+                </div>
+                <div class="glass-quantum" style="padding: 1rem; text-align:center; margin-top:0.5rem;">
+                    <i class="fas fa-microphone-alt"></i> <strong>Plant Bioacoustics:</strong> <span id="plantVoiceMessage">"Root zone temperature optimal. Transpiration stable."</span>
+                    <button id="generateVoiceInsightBtn" class="btn-outline" style="margin-left: 12px;"><i class="fas fa-comment"></i> AI Observation</button>
+                </div>
+            </div>
+
+            <!-- ECO IMPACT MATRIX -->
+            <div id="ecoTab" class="hidden">
+                <div class="glass-quantum" style="padding: 2rem; text-align:center;">
+                    <i class="fas fa-globe-asia" style="font-size: 3.5rem; color: #358a57;"></i>
+                    <h3>Circular Economy Intelligence</h3>
+                    <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap;">
+                        <div><i class="fas fa-trash-alt"></i> Waste Diverted: <strong id="plasticSavedStat2">8</strong> bottles</div>
+                        <div><i class="fas fa-tree"></i> Seedling Equivalent: <strong id="treeEquiv">1.2</strong> trees</div>
+                        <div><i class="fas fa-car"></i> Food Miles Saved: <strong id="foodMiles">5.4</strong> km</div>
+                        <div><i class="fas fa-hand-holding-usd"></i> Savings: <strong id="moneySaved">$7.80</strong></div>
+                    </div>
+                    <p id="ecoMessage" class="badge-responsive">🌍 Every recycled bottle reduces plastic pollution + provides fresh food.</p>
+                    <button id="shareEcoBtn" class="btn-primary" style="margin-top: 20px;"><i class="fas fa-chart-simple"></i> Recalculate Impact</button>
+                    <button id="donateVirtualBtn" class="btn-outline" style="margin-top: 12px;"><i class="fas fa-seedling"></i> Plant Virtual Mangrove</button>
+                </div>
+            </div>
+
+            <!-- DEEP ANALYTICS -->
+            <div id="analyticsTab" class="hidden">
+                <div class="dashboard-grid">
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <h4><i class="fas fa-chart-pie"></i> Multi-Dimensional Metrics</h4>
+                        <canvas id="radarChartCanvas" height="200"></canvas>
+                        <div class="metric-row"><span>🌡️ VPD (kPa)</span><strong id="vpdValue">0.85</strong></div>
+                        <div class="metric-row"><span>⚡ Growth Efficiency</span><strong id="growthEfficiency">89%</strong></div>
+                        <div class="metric-row"><span>🧬 Root Health Index</span><strong id="rootHealth">A-</strong></div>
+                        <button id="generateFullReportBtn" class="btn-outline" style="margin-top: 14px; width:100%"><i class="fas fa-file-alt"></i> Generate Full Report</button>
+                    </div>
+                    <div class="glass-quantum" style="padding: 1.6rem;">
+                        <h4><i class="fas fa-history"></i> Activity Log</h4>
+                        <div id="historicalLogs" style="max-height: 230px; overflow-y: auto; font-size: 0.75rem;">
+                            <p>📌 System initialized — Quantum sensors online</p>
+                        </div>
+                        <button id="clearLogsBtn" class="btn-outline" style="width:100%; margin-top: 12px;">Clear Logs</button>
+                        <button id="exportLogBtn" class="btn-outline" style="width:100%; margin-top: 8px;"><i class="fas fa-download"></i> Export CSV</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMMUNITY BIOHUB -->
+            <div id="communityTab" class="hidden">
+                <div class="glass-quantum" style="padding: 2rem; text-align:center;">
+                    <i class="fas fa-users" style="font-size: 3rem; color: #2d8652;"></i>
+                    <h3>Urban Farmers Collective</h3>
+                    <p>Connect, share harvest tips, and compete in sustainability challenges</p>
+                    <div style="display: flex; justify-content: center; gap: 1.2rem; margin: 1.8rem 0; flex-wrap: wrap;">
+                        <div class="badge-responsive"><i class="fas fa-trophy"></i> Local Rank: #42</div>
+                        <div class="badge-responsive"><i class="fas fa-leaf"></i> Challenge: "Zero Waste Week"</div>
+                        <div class="badge-responsive"><i class="fas fa-receipt"></i> Shared recipes: 3</div>
+                    </div>
+                    <button id="communityTipBtn" class="btn-primary"><i class="fas fa-lightbulb"></i> Get Daily Tip from Community</button>
+                    <p id="communityTipText" style="margin-top: 1rem; font-style:italic;">✨ "Use coffee grounds as organic supplement!"</p>
+                </div>
+            </div>
+        </div>
+        <footer>🌱 AquaBottle Quantum — AI + IoT urban farming simulator | Data persists locally | Made for sustainable future</footer>
+    </div>
+</div>
+
+<script>
+    // ---------- ADVANCED STATE MANAGEMENT ----------
+    let currentUser = null;
+    let plantData = {
+        currentDay: 1, waterLevel: 84, temperature: 24.2, lightHours: 6.3, ph: 6.5, ec: 1.2, humidity: 64,
+        cycleCount: 1, bottlesRecycled: 8, co2Offset: 2.8, logs: ["🌿 Day 1: Quantum system booted - pechay seeds sowed"]
+    };
+    let chartMain = null, radarChart = null;
+
+    // Save/load with validation
+    function persistData() {
+        if(!currentUser) return;
+        const store = JSON.parse(localStorage.getItem('aquabottle_q') || '{}');
+        store[currentUser] = plantData;
+        localStorage.setItem('aquabottle_q', JSON.stringify(store));
+    }
+    function fetchData() {
+        if(!currentUser) return;
+        const store = JSON.parse(localStorage.getItem('aquabottle_q') || '{}');
+        if(store[currentUser]) plantData = store[currentUser];
+        else { plantData.logs = ["🚀 New journey started: Welcome to AquaBottle!"]; persistData(); }
+        refreshQuantumUI();
+    }
+
+    // Health index engine
+    function calcHealthScore() {
+        let score = 85;
+        if(plantData.waterLevel < 45) score -= 28;
+        else if(plantData.waterLevel < 65) score -= 8;
+        if(plantData.lightHours < 4.2) score -= 26;
+        else if(plantData.lightHours < 5.6) score -= 12;
+        if(plantData.temperature < 17 || plantData.temperature > 32) score -= 22;
+        if(plantData.ph < 5.4 || plantData.ph > 7.2) score -= 24;
+        if(plantData.ec < 0.8 || plantData.ec > 2.0) score -= 15;
+        if(plantData.currentDay >= 40) score = Math.min(100, score+12);
+        return Math.min(100, Math.max(12, score));
+    }
+
+    function getStageDetailed(day) {
+        if(day <= 7) return "🌱 Germination / Radicle emergence";
+        if(day <= 18) return "🍃 Vegetative (leaf expansion)";
+        if(day <= 32) return "🌿 Heading / Core formation";
+        if(day <= 41) return "🎯 Maturation & Bulking";
+        return "🎉 READY - Optimal harvest";
+    }
+
+    function refreshQuantumUI() {
+        if(!currentUser) return;
+        const day = plantData.currentDay, maxDays = 42;
+        const percent = (day/maxDays)*100;
+        document.getElementById('growthFillMain') && (document.getElementById('growthFillMain').style.width = `${percent}%`);
+        document.getElementById('trackProgressFill') && (document.getElementById('trackProgressFill').style.width = `${percent}%`);
+        document.getElementById('currentDayNum') && (document.getElementById('currentDayNum').innerText = day);
+        document.getElementById('trackDaySpan') && (document.getElementById('trackDaySpan').innerText = day);
+        const stage = getStageDetailed(day);
+        document.getElementById('plantStageLabel') && (document.getElementById('plantStageLabel').innerText = stage.split(' ')[0]);
+        document.getElementById('preciseStageLabel') && (document.getElementById('preciseStageLabel').innerText = stage);
+        const health = calcHealthScore();
+        document.getElementById('healthScoreSpan') && (document.getElementById('healthScoreSpan').innerHTML = health+'%');
+        let bioEff = health>=85 ? "A+ Excellent" : health>=65 ? "B Stable" : "C Needs care";
+        document.getElementById('bioEfficiency') && (document.getElementById('bioEfficiency').innerText = bioEff);
+        let daysLeft = Math.max(0, maxDays - day);
+        document.getElementById('harvestCounter') && (document.getElementById('harvestCounter').innerHTML = daysLeft===0 ? "NOW!" : `${daysLeft}d`);
+        let harvestMsgDiv = document.getElementById('harvestMsg');
+        if(harvestMsgDiv) harvestMsgDiv.innerHTML = daysLeft===0 ? "🎉 HARVEST! Cut outer leaves 🎉" : (daysLeft<=6 ? "⏳ Pre-harvest flush ready" : `🌿 ${daysLeft} days to maturity`);
+        let yieldEst = day>=30 ? 190+(health/100)*70 : (day>12 ? 80+(health/100)*55 : 30);
+        document.getElementById('yieldEstimate') && (document.getElementById('yieldEstimate').innerHTML = Math.floor(yieldEst)+'g');
+        document.getElementById('harvestWindow') && (document.getElementById('harvestWindow').innerHTML = day>36 ? "Now - Day 42" : "Day 38-42");
+        document.getElementById('waterValue') && (document.getElementById('waterValue').innerHTML = `${plantData.waterLevel}%`);
+        document.getElementById('tempValue') && (document.getElementById('tempValue').innerHTML = `${plantData.temperature.toFixed(1)}°C`);
+        document.getElementById('humidityVal') && (document.getElementById('humidityVal').innerHTML = plantData.humidity+'%');
+        document.getElementById('lightValue') && (document.getElementById('lightValue').innerHTML = `${plantData.lightHours.toFixed(1)}h`);
+        document.getElementById('phValue') && (document.getElementById('phValue').innerHTML = plantData.ph.toFixed(1));
+        document.getElementById('ecValue') && (document.getElementById('ecValue').innerHTML = plantData.ec.toFixed(1));
+        let waterOk = plantData.waterLevel>=55;
+        document.getElementById('waterStatusIcon') && (document.getElementById('waterStatusIcon').innerHTML = waterOk ? "💧 Good" : (plantData.waterLevel>=35 ? "⚠️ Low" : "🔴 Critical"));
+        let lightStatus = plantData.lightHours>=5.5 ? "☀️ Ideal" : "🌙 Low";
+        document.getElementById('lightStatusIcon') && (document.getElementById('lightStatusIcon').innerHTML = lightStatus);
+        let alertMsg = '';
+        if(plantData.waterLevel<45) alertMsg += "💧 Refill reservoir + nutrients. ";
+        if(plantData.lightHours<5) alertMsg += "☀️ Increase light to 7h. ";
+        if(plantData.ph<5.6 || plantData.ph>6.9) alertMsg += "🧪 Adjust pH to 6.2-6.8. ";
+        if(daysLeft===0) alertMsg = "🌟 HARVEST READY! Click 'New Cycle' to replant.";
+        if(!alertMsg) alertMsg = "✅ All parameters nominal. Keep monitoring.";
+        document.getElementById('urgentAlert') && (document.getElementById('urgentAlert').innerHTML = `<i class="fas fa-bell"></i> ${alertMsg}`);
+        document.getElementById('adviceWater') && (document.getElementById('adviceWater').innerHTML = plantData.waterLevel<50 ? "URGENT: Refill now!" : "Water level acceptable");
+        let nextNut = day<10 ? 10 : (day<20 ? 20 : (day<30 ? 30 : (day<=38 ? 38 : "Harvest")));
+        document.getElementById('adviceNutrient') && (document.getElementById('adviceNutrient').innerHTML = `🧪 Feed day: ${nextNut}`);
+        document.getElementById('bottlesSaved') && (document.getElementById('bottlesSaved').innerHTML = plantData.bottlesRecycled);
+        document.getElementById('plasticSavedStat2') && (document.getElementById('plasticSavedStat2').innerHTML = plantData.bottlesRecycled);
+        document.getElementById('cycleCounter') && (document.getElementById('cycleCounter').innerHTML = plantData.cycleCount);
+        let co2Val = (plantData.bottlesRecycled * 0.19 + (plantData.currentDay/42)*1.1).toFixed(1);
+        document.getElementById('co2Saved') && (document.getElementById('co2Saved').innerHTML = co2Val + ' kg');
+        document.getElementById('treeEquiv') && (document.getElementById('treeEquiv').innerHTML = (plantData.bottlesRecycled * 0.14).toFixed(1));
+        document.getElementById('foodMiles') && (document.getElementById('foodMiles').innerHTML = (plantData.currentDay*0.13).toFixed(1));
+        document.getElementById('moneySaved') && (document.getElementById('moneySaved').innerHTML = `$${(plantData.bottlesRecycled * 0.95 + (plantData.currentDay/42)*2.5).toFixed(2)}`);
+        document.getElementById('impactScore') && (document.getElementById('impactScore').innerHTML = `${Math.floor(plantData.bottlesRecycled*8 + plantData.currentDay*1.2)} pts`);
+        let vpdCalc = (plantData.temperature * 0.61 - plantData.humidity/16).toFixed(2);
+        document.getElementById('vpdValue') && (document.getElementById('vpdValue').innerHTML = vpdCalc + " kPa");
+        let eff = Math.min(97, Math.floor(health * 0.88 + (plantData.lightHours/8)*10));
+        document.getElementById('growthEfficiency') && (document.getElementById('growthEfficiency').innerHTML = eff+"%");
+        document.getElementById('rootHealth') && (document.getElementById('rootHealth').innerHTML = health>75 ? "A" : (health>55 ? "B+" : "C"));
+        drawAdvancedCharts(day, health);
+        if(document.getElementById('plantVoiceMessage')) document.getElementById('plantVoiceMessage').innerHTML = health>75 ? "🌿 Vibrant growth, keep stable EC." : (health>50 ? "⚠️ Mild stress detected." : "🔴 Critical! Check roots.");
+        let logsDiv = document.getElementById('historicalLogs');
+        if(logsDiv && plantData.logs) logsDiv.innerHTML = plantData.logs.slice(0,6).map(l=>`📌 ${l}`).join('<br>') || "<p>No logs</p>";
+    }
+
+    function drawAdvancedCharts(day, health){
+        const ctx = document.getElementById('growthChartCanvas')?.getContext('2d');
+        if(ctx && chartMain) chartMain.destroy();
+        if(ctx){
+            chartMain = new Chart(ctx, {
+                type: 'line', data: { labels: ['W1','W2','W3','W4','W5','W6','Now'], datasets: [{ label: 'Health %', data: [73,77,82,86,89,93,health], borderColor: '#2c8a56', fill: true, tension: 0.3, backgroundColor: 'rgba(60,160,90,0.1)' }] },
+                options: { responsive: true, maintainAspectRatio: true }
+            });
+        }
+        const radarCtx = document.getElementById('radarChartCanvas')?.getContext('2d');
+        if(radarCtx && radarChart) radarChart.destroy();
+        if(radarCtx){
+            radarChart = new Chart(radarCtx, {
+                type: 'radar', data: { labels: ['Water','Light','pH','Temp','EC','Humidity'], datasets: [{ label: 'Current Score', data: [Math.min(100,plantData.waterLevel), Math.min(100,plantData.lightHours*13), plantData.ph>6.9?55:88, plantData.temperature>29?60:84, Math.min(100,plantData.ec*45), plantData.humidity], backgroundColor: 'rgba(70,150,90,0.2)', borderColor: '#1e7548' }] },
+                options: { responsive: true }
+            });
+        }
+    }
+
+    // ----- ACTIONS -----
+    function quantumAdvance() { if(plantData.currentDay<42){ plantData.currentDay++; plantData.waterLevel = Math.min(100, Math.max(18, plantData.waterLevel + Math.floor(Math.random()*16)-7)); plantData.lightHours += (Math.random()*0.7-0.35); plantData.temperature += (Math.random()*1.4-0.7); plantData.ph += (Math.random()*0.18-0.09); plantData.ph = Math.min(7.5, Math.max(5.5, plantData.ph)); plantData.humidity += (Math.random()*7-3); plantData.humidity = Math.min(88, Math.max(44, plantData.humidity)); plantData.logs.unshift(`Day ${plantData.currentDay}: AI scan complete.`); if(plantData.logs.length>7) plantData.logs.pop(); persistData(); refreshQuantumUI(); if(plantData.currentDay===42) alert("🏆 AMAZING! Your pechay/mustasa is ready for organic harvest."); } else alert("Harvest ready! Please reset cycle."); }
+    function resetCycleQuantum(){ if(confirm("♻️ Start new cycle? Biomass will be composted.")){ plantData = { currentDay:1, waterLevel:86, temperature:24, lightHours:6.3, ph:6.5, ec:1.2, humidity:64, cycleCount:plantData.cycleCount+1, bottlesRecycled:plantData.bottlesRecycled+1, co2Offset:plantData.co2Offset+0.35, logs:[`✨ Cycle ${plantData.cycleCount+1}: New seeds sown`] }; persistData(); refreshQuantumUI(); } }
+    function randomSensorQuantum(){ plantData.waterLevel = Math.min(100, Math.max(22, plantData.waterLevel+(Math.random()*28-14))); plantData.lightHours = Math.min(9.2, Math.max(3.2, plantData.lightHours+(Math.random()*1.6-0.8))); plantData.temperature = Math.min(34, Math.max(17, plantData.temperature+(Math.random()*2-1))); plantData.ph = Math.min(7.6, Math.max(5.3, plantData.ph+(Math.random()*0.4-0.2))); plantData.humidity = Math.min(89, Math.max(44, plantData.humidity+(Math.random()*10-5))); persistData(); refreshQuantumUI(); }
+    function setManualDayHandler(val){ plantData.currentDay = Math.min(42, Math.max(1, parseInt(val))); persistData(); refreshQuantumUI(); }
+    function setManualEnvAll(water, light, ph, temp){ plantData.waterLevel = Math.min(100, Math.max(0, parseInt(water))); plantData.lightHours = Math.min(9.5, Math.max(2, parseFloat(light))); plantData.ph = Math.min(7.7, Math.max(5, parseFloat(ph))); if(temp) plantData.temperature = Math.min(35, Math.max(16, parseFloat(temp))); persistData(); refreshQuantumUI(); }
+    function handleLoginQuantum(u,p){ if(u.length>=2 && p.length>=2){ currentUser=u; fetchData(); document.getElementById('authSection').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden'); refreshQuantumUI(); return true; } else alert("Username must be >2 chars"); return false; }
+    function logoutQuantum(){ currentUser=null; document.getElementById('authSection').classList.remove('hidden'); document.getElementById('mainApp').classList.add('hidden'); }
+    function switchTabQuantum(tab){ ['dashTab','guideTab','trackTab','ecoTab','analyticsTab','communityTab'].forEach(id=>{let el=document.getElementById(id); if(el)el.classList.add('hidden');}); document.getElementById(`${tab}Tab`)?.classList.remove('hidden'); document.querySelectorAll('.nav-btn[data-tab]').forEach(btn=>btn.classList.remove('active')); document.querySelectorAll(`.nav-btn[data-tab="${tab}"]`).forEach(btn=>btn.classList.add('active')); if(tab==='analytics') drawAdvancedCharts(plantData.currentDay, calcHealthScore()); }
+    
+    // Event binding
+    document.getElementById('loginBtn')?.addEventListener('click',()=>handleLoginQuantum(document.getElementById('loginUsername').value.trim(), document.getElementById('loginPassword').value.trim()));
+    document.getElementById('logoutMainBtn')?.addEventListener('click',logoutQuantum);
+    document.getElementById('simulateDayBtn')?.addEventListener('click',quantumAdvance);
+    document.getElementById('resetGrowthBtn')?.addEventListener('click',resetCycleQuantum);
+    document.getElementById('simulateSensorBtn')?.addEventListener('click',randomSensorQuantum);
+    document.getElementById('applyDayBtn')?.addEventListener('click',()=>setManualDayHandler(document.getElementById('daySlider').value));
+    document.getElementById('saveEnvAdvancedBtn')?.addEventListener('click',()=>setManualEnvAll(document.getElementById('manualWater').value, document.getElementById('manualLight').value, document.getElementById('manualPh').value, document.getElementById('manualTemp').value));
+    document.getElementById('randomSensorChartBtn')?.addEventListener('click',randomSensorQuantum);
+    document.getElementById('shareEcoBtn')?.addEventListener('click',()=>{ refreshQuantumUI(); alert("🌍 Eco-impact calculated! Keep recycling."); });
+    document.getElementById('generateVoiceInsightBtn')?.addEventListener('click',()=>{ let msgs=["🌿 Leaves are vibrant, good nutrient uptake.","💧 Slight humidity drop, mist recommended.","🍃 Check lower leaves for tip burn."]; document.getElementById('plantVoiceMessage').innerHTML = msgs[Math.floor(Math.random()*3)]; });
+    document.getElementById('generateFullReportBtn')?.addEventListener('click',()=>alert(`📊 Crop Report: Day ${plantData.currentDay}, Health ${calcHealthScore()}%. Estimated yield: ${Math.floor(yieldEst)}g. Bottles saved: ${plantData.bottlesRecycled}.`));
+    document.getElementById('clearLogsBtn')?.addEventListener('click',()=>{ plantData.logs = ["🗑️ Logs cleared by user"]; persistData(); refreshQuantumUI(); alert("Logs cleared."); });
+    document.getElementById('exportLogBtn')?.addEventListener('click',()=>{ alert("CSV export simulation: logs copied to console."); console.log(plantData.logs); });
+    document.getElementById('donateVirtualBtn')?.addEventListener('click',()=>alert("🌳 Virtual tree donation recorded! +20 eco points"));
+    document.getElementById('communityTipBtn')?.addEventListener('click',()=>{ let tips=["🌱 Add crushed eggshells for calcium boost!","💧 Use rainwater for better pH stability.","🐞 Marigold as companion plant deters pests."]; document.getElementById('communityTipText').innerHTML = `✨ "${tips[Math.floor(Math.random()*3)]}"`; });
+    document.querySelectorAll('.nav-btn[data-tab]').forEach(btn=>btn.addEventListener('click',()=>switchTabQuantum(btn.getAttribute('data-tab'))));
+    document.getElementById('authSection').classList.remove('hidden');
+    document.getElementById('mainApp').classList.add('hidden');
+</script>
+</body>
+</html>
+```
